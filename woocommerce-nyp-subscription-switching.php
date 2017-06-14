@@ -145,7 +145,7 @@ class WC_NYP_Subs_Switching {
 			$args = array( 'nyp' => $subscription->get_item_subtotal( $existing_item, $inc_tax ) );
 
 			if( WC_Name_Your_Price_Helpers::is_billing_period_variable( $nyp_product ) ){
-				$args['nyp-period'] = $subscription->billing_period;
+				$args['nyp-period'] = $subscription->get_billing_period();
 			}
 
 			if( $nyp_product->is_type( 'subscription_variation' ) ){
@@ -201,7 +201,7 @@ class WC_NYP_Subs_Switching {
 
 			$initial_subscription_price = $subscription->get_line_subtotal( $item );
 			$new_subscription_price = floatval( WC_Name_Your_Price_Helpers::get_posted_price( $nyp_id, $prefix ) );
-			$initial_subscription_period = $subscription->billing_period;
+			$initial_subscription_period = $subscription->get_billing_period();
 			$new_subscription_period = WC_Name_Your_Price_Helpers::get_posted_period( $nyp_id, $prefix );
 
 			$nyp_error_message = '';
@@ -231,7 +231,7 @@ class WC_NYP_Subs_Switching {
 	 */
 	public function nyp_subscription_switch_handler(){
 		global $post;
-		if ( ! isset( $_GET['switch-subscription'] ) && is_product() && $product = get_product( $post ) ) {
+		if ( ! isset( $_GET['switch-subscription'] ) && is_product() && $product = wc_get_product( $post ) ) {
 			
 			// variable product with no variation switching allowed
 			if ( $product->is_type( 'variable-subscription' ) && in_array( get_option( WC_Subscriptions_Admin::$option_prefix . '_allow_switching', 'no' ), array( 'no', 'grouped' ) ) && 'no' != $product->limit_subscriptions ) {
