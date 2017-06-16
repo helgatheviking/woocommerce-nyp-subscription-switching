@@ -10,7 +10,7 @@
  * License URI: http://www.gnu.org/licenses/gpl-3.0.html
  * Text Domain: wc_nyp_sub_switch
  * Domain Path: /languages
- * Requires at least: 4.8
+ * Requires at least: 4.5
  * Tested up to: 4.8
  * WC requires at least: 2.4.0
  * WC tested up to: 3.0   
