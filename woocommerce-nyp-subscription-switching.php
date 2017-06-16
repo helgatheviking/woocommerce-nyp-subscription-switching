@@ -3,17 +3,17 @@
  * Plugin Name: WooCommerce NYP Subscription Switching
  * Plugin URI:  http://github.com/helgatheviking/woocommerce-nyp-subscription-switching
  * Description: Enable price changing on Name Your Price subscriptions
- * Version:     0.1.0
+ * Version:     0.1.1
  * Author:      Kathy Darling
  * Author URI:  http://www.kathyisawesome.com
  * License: GNU General Public License v3.0
  * License URI: http://www.gnu.org/licenses/gpl-3.0.html
  * Text Domain: wc_nyp_sub_switch
  * Domain Path: /languages
- * Requires at least: 4.5.0
- * Tested up to: 4.5.0
+ * Requires at least: 4.8
+ * Tested up to: 4.8
  * WC requires at least: 2.4.0
- * WC tested up to: 2.5.0   
+ * WC tested up to: 3.0   
  */
 
 /**
@@ -145,7 +145,7 @@ class WC_NYP_Subs_Switching {
 			$args = array( 'nyp' => $subscription->get_item_subtotal( $existing_item, $inc_tax ) );
 
 			if( WC_Name_Your_Price_Helpers::is_billing_period_variable( $nyp_product ) ){
-				$args['nyp-period'] = $subscription->get_billing_period();
+				$args['nyp-period'] = WC_Name_Your_Price_Core_Compatibility::get_prop( $subscription, 'billing_period' );
 			}
 
 			if( $nyp_product->is_type( 'subscription_variation' ) ){
@@ -201,7 +201,7 @@ class WC_NYP_Subs_Switching {
 
 			$initial_subscription_price = $subscription->get_line_subtotal( $item );
 			$new_subscription_price = floatval( WC_Name_Your_Price_Helpers::get_posted_price( $nyp_id, $prefix ) );
-			$initial_subscription_period = $subscription->get_billing_period();
+			$initial_subscription_period = WC_Name_Your_Price_Core_Compatibility::get_prop( $subscription, 'billing_period' );
 			$new_subscription_period = WC_Name_Your_Price_Helpers::get_posted_period( $nyp_id, $prefix );
 
 			$nyp_error_message = '';
