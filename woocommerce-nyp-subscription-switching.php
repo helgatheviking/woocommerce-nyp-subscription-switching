@@ -3,7 +3,7 @@
  * Plugin Name: WooCommerce NYP Subscription Switching
  * Plugin URI:  http://github.com/helgatheviking/woocommerce-nyp-subscription-switching
  * Description: Enable price changing on Name Your Price subscriptions
- * Version:     0.1.1
+ * Version:     0.1.2
  * Author:      Kathy Darling
  * Author URI:  http://www.kathyisawesome.com
  * License: GNU General Public License v3.0
@@ -13,7 +13,7 @@
  * Requires at least: 4.5
  * Tested up to: 4.8
  * WC requires at least: 2.4.0
- * WC tested up to: 3.0   
+ * WC tested up to: 3.0
  */
 
 /**
@@ -34,13 +34,13 @@ class WC_NYP_Subs_Switching {
 	 * @var WC_NYP_Subs_Switching - the single instance of the class
 	 * @since 2.0
 	 */
-	protected static $_instance = null;           
+	protected static $_instance = null;
 
 	/**
 	 * @var plugin version
 	 * @since 2.0
 	 */
-	public $version = '2.3.4';   
+	public $version = '2.3.4';
 
 	/**
 	 * @var required WooCommerce version
@@ -82,7 +82,7 @@ class WC_NYP_Subs_Switching {
 	public function __wakeup() {
 		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?' ), 'wc_name_your_price' );
 	}
-  
+
 	/**
 	 * WC_NYP_Subs_Switching Constructor
 	 *
@@ -91,7 +91,7 @@ class WC_NYP_Subs_Switching {
 	 * @since 1.0
 	 */
 
-	public function __construct() { 
+	public function __construct() {
 
 		// allow subscription prices to be switched
 		add_filter( 'wcs_is_product_switchable', array( $this, 'is_switchable' ), 10, 3 );
@@ -136,7 +136,7 @@ class WC_NYP_Subs_Switching {
 
 		$nyp_id = ! empty( $existing_item['variation_id'] ) ? $existing_item['variation_id'] : $existing_item['product_id'];
 
-		$nyp_product = wc_nyp_get_product( $nyp_id );
+		$nyp_product = wc_get_product( $nyp_id );
 
 		if( WC_Name_Your_Price_Helpers::is_nyp( $nyp_product ) ){
 
@@ -205,13 +205,13 @@ class WC_NYP_Subs_Switching {
 			$new_subscription_period = WC_Name_Your_Price_Helpers::get_posted_period( $nyp_id, $prefix );
 
 			$nyp_error_message = '';
-					
+
 			// if variable billing period check both price and billing period
 			if( WC_Name_Your_Price_Helpers::is_billing_period_variable( $nyp_id ) && $new_subscription_price == $initial_subscription_price && $new_subscription_period == $initial_subscription_period ){
 				$nyp_error_message = __( 'Please modify the price or billing period so that it is not the same as your existing subscription.', 'wc_name_your_price' );
 			} else if ( $new_subscription_price == $initial_subscription_price ){
 				$nyp_error_message = __( 'Please modify the price so that it is not the same as your existing subscription.', 'wc_name_your_price' );
-			} 
+			}
 
 			// replace the error message
 			$error_message = $nyp_error_message;
@@ -232,7 +232,7 @@ class WC_NYP_Subs_Switching {
 	public function nyp_subscription_switch_handler(){
 		global $post;
 		if ( ! isset( $_GET['switch-subscription'] ) && is_product() && $product = wc_get_product( $post ) ) {
-			
+
 			// variable product with no variation switching allowed
 			if ( $product->is_type( 'variable-subscription' ) && in_array( get_option( WC_Subscriptions_Admin::$option_prefix . '_allow_switching', 'no' ), array( 'no', 'grouped' ) ) && 'no' != $product->limit_subscriptions ) {
 
@@ -258,7 +258,7 @@ class WC_NYP_Subs_Switching {
 							wp_redirect( add_query_arg( array( 'auto-switch' => 'true', 'nyp-only' => 1 ), WC_Subscriptions_Switcher::get_switch_url( $item_id, $item, $subscription ) ) );
 							exit;
 
-						}						
+						}
 
 					}
 
