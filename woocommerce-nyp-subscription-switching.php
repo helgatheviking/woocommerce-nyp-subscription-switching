@@ -32,19 +32,19 @@ class WC_NYP_Subs_Switching {
 
 	/**
 	 * @var WC_NYP_Subs_Switching - the single instance of the class
-	 * @since 2.0
+	 * @since 0.1.0
 	 */
 	protected static $_instance = null;
 
 	/**
 	 * @var plugin version
-	 * @since 2.0
+	 * @since 0.1.0
 	 */
 	public $version = '2.3.4';
 
 	/**
 	 * @var required WooCommerce version
-	 * @since 2.1
+	 * @since 0.1.0
 	 */
 	public $required_woo = '3.0.0';
 
@@ -56,7 +56,7 @@ class WC_NYP_Subs_Switching {
 	 * @static
 	 * @see WC_NYP_Subs_Switching()
 	 * @return WC_NYP_Subs_Switching - Main instance
-	 * @since 2.0
+	 * @since 0.1.0
 	 */
 	public static function instance() {
 		if ( is_null( self::$_instance ) ) {
@@ -68,7 +68,7 @@ class WC_NYP_Subs_Switching {
 	/**
 	 * Cloning is forbidden.
 	 *
-	 * @since 2.0
+	 * @since 0.1.0
 	 */
 	public function __clone() {
 		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?' ), 'wc_name_your_price' );
@@ -77,7 +77,7 @@ class WC_NYP_Subs_Switching {
 	/**
 	 * Unserializing instances of this class is forbidden.
 	 *
-	 * @since 2.0
+	 * @since 0.1.0
 	 */
 	public function __wakeup() {
 		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?' ), 'wc_name_your_price' );
@@ -88,7 +88,7 @@ class WC_NYP_Subs_Switching {
 	 *
 	 * @access public
      * @return WC_NYP_Subs_Switching
-	 * @since 1.0
+	 * @since 0.1.0
 	 */
 
 	public function __construct() {
@@ -110,7 +110,7 @@ class WC_NYP_Subs_Switching {
 	 * @param bool $is_product_switchable
 	 * @param obj $product
 	 * @return bool
-	 * @since 2.3.4
+	 * @since 0.1.0
 	 */
 	public function is_switchable( $is_product_switchable, $product, $variation ){
 		if( WC_Name_Your_Price_Helpers::is_nyp( $product ) || WC_Name_Your_Price_Helpers::is_nyp( $variation ) ){
@@ -128,7 +128,7 @@ class WC_NYP_Subs_Switching {
 	 * @param int $subscription_id
 	 * @param $item_id (the order item)
 	 * @return str
-	 * @since 2.3.4
+	 * @since 0.1.0
 	 */
 	public function add_switch_query_args( $permalink, $subscription_id, $item_id ){
 		$subscription  = wcs_get_subscription( $subscription_id );
@@ -164,7 +164,7 @@ class WC_NYP_Subs_Switching {
 	 *
 	 * @param str $html
 	 * @return str
-	 * @since 2.3.4
+	 * @since 0.1.0
 	 */
 	public function disable_attributes( $html ){
 		global $product;
@@ -186,7 +186,7 @@ class WC_NYP_Subs_Switching {
 	 * @param bool $is_product_switchable
 	 * @param obj $product
 	 * @return bool
-	 * @since 2.3.4
+	 * @since 0.1.0
 	 */
 	public function subscription_switch_validation( $error_message, $product_id, $quantity, $variation_id, $subscription, $item ){
 
@@ -227,7 +227,7 @@ class WC_NYP_Subs_Switching {
 	 * @param bool $is_product_switchable
 	 * @param obj $product
 	 * @return bool
-	 * @since 2.3.4
+	 * @since 0.1.0
 	 */
 	public function nyp_subscription_switch_handler(){
 		global $post;
@@ -278,7 +278,7 @@ endif; // end class_exists check
 /**
  * Returns the main instance of WC_NYP_Subs_Switching to prevent the need to use globals.
  *
- * @since  1.0
+ * @since  0.1.0
  * @return WC_NYP_Subs_Switching
  */
 function WC_NYP_Subs_Switching() {
