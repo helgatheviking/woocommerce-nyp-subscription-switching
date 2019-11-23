@@ -49,6 +49,16 @@ class WC_NYP_Subs_Switching {
 	public $required_woo = '3.6.0';
 
 	/**
+	 * @var required versions
+	 * @since 0.2.0
+	 */
+	public $required = array( 
+		'woo'  => '3.6.0',
+		'nyp'  => '2.9.0',
+		'subs' => '2.6.0'
+	);
+
+	/**
 	 * Main WC_NYP_Subs_Switching Instance
 	 *
 	 * Ensures only one instance of WC_NYP_Subs_Switching is loaded or can be loaded.
@@ -93,6 +103,11 @@ class WC_NYP_Subs_Switching {
 
 	public function __construct() {
 
+		if( ! $this->environment_check() ) {
+			add_action('admin_notices', array( $this, 'admin_notices' ) );
+			return false;
+		}
+
 		// allow subscription prices to be switched
 		add_filter( 'wcs_is_product_switchable', array( $this, 'is_switchable' ), 10, 3 );
 		add_filter( 'woocommerce_subscriptions_add_switch_query_args', array( $this, 'add_switch_query_args' ), 10, 3 );
@@ -103,6 +118,64 @@ class WC_NYP_Subs_Switching {
 		add_filter( 'template_redirect', array( $this, 'nyp_subscription_switch_handler' ) );
 
     }
+
+	/**
+	 * Check all requirements are met.
+	 *
+	 * @return bool
+	 * @since  0.2.0
+	 */
+	public function environment_check() {
+
+		$notices = array();
+
+		// Check WooCommerce version.
+		if ( function_exists( 'WC' ) && version_compare(  WC()->version, $this->required[ 'woo' ] ) < 0 ) {
+			$notices[] = sprintf( __( '<strong>WooCommerce Name Your Price: Subscription Switching</strong> mini-extension is inactive. The <strong>WooCommerce</strong> plugin must be active and atleast version %s for Name Your Price Switching to function</strong>. Please update or activate WooCommerce.', 'wc_nyp_sub_switch' ), $this->required[ 'woo' ] );
+		}
+			
+		if( class_exists( 'WC_Subscriptions' ) && version_compare( WC_Subscriptions::$version, $this->required[ 'subs' ] ) < 0 ) {
+			$notices[] = sprintf( __( '<strong>WooCommerce Name Your Price: Subscription Switching</strong> mini-extension is inactive. The <strong>WooCommerce Subscriptions</strong> plugin must be active and atleast version %s for Name Your Price Switching to function</strong>. Please update or activate WooCommerce Subscriptions.', 'wc_nyp_sub_switch' ), $this->required[ 'subs' ] );
+		}
+
+		if( class_exists( 'wc_nyp_sub_switch' ) && version_compare( WC_Name_Your_Price()->version, $this->required[ 'nyp' ] ) < 0 ) {
+			$notices[] = sprintf( __( '<strong>WooCommerce Name Your Price: Subscription Switching</strong> mini-extension is inactive. The <strong>WooCommerce Name Your Price</strong> plugin must be active and atleast version %s for Name Your Price Switching to function</strong>. Please update or activate WooCommerce Name Your Price.', 'wc_nyp_sub_switch' ), $this->required[ 'nyp' ] );
+		}
+
+		if( empty( $notices ) ) {
+			// If the option does not exist at all, we assume that by activating this plugin a user wants to enable it.
+			if( false === get_option( WC_Subscriptions_Admin::$option_prefix . '_allow_switching_nyp_price' ) ) {
+				update_option( WC_Subscriptions_Admin::$option_prefix . '_allow_switching_nyp_price', 'yes' );
+			}
+
+			return true;
+		} else {
+			update_option( 'wc_nyp_subs_switching_notices', $notices );
+			return false;
+		}
+
+    }
+
+	/**
+	 * Display notices.
+	 *
+	 * @return bool
+	 * @since  0.2.0
+	 */
+	public function admin_notices( $data ) {
+
+		$notices = get_option( 'wc_nyp_subs_switching_notices' );
+
+		if( is_array( $notices ) ) {
+			foreach( $notices as $notice ) {
+				echo '<div class="notice notice-error">
+					<p>' . wp_kses_post( $notice ) . '</p>
+				</div>';
+			}
+			delete_option( 'wc_nyp_subs_switching_notices' );
+		}
+
+	}
 
 	/*
 	 * Ensures that NYP products are allowed to be switched
@@ -286,4 +359,4 @@ function WC_NYP_Subs_Switching() {
 }
 
 // Launch the whole plugin once NYP is loaded
-add_action( 'wc_name_your_price_loaded', 'WC_NYP_Subs_Switching' );
+add_action( 'plugins_loaded', 'WC_NYP_Subs_Switching' );
