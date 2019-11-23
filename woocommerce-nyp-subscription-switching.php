@@ -3,7 +3,7 @@
  * Plugin Name: WooCommerce NYP Subscription Switching
  * Plugin URI:  http://github.com/helgatheviking/woocommerce-nyp-subscription-switching
  * Description: Enable price changing on Name Your Price subscriptions
- * Version:     0.1.2
+ * Version:     0.2.0
  * Author:      Kathy Darling
  * Author URI:  http://www.kathyisawesome.com
  * License: GNU General Public License v3.0
