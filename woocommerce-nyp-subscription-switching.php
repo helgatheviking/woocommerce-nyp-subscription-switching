@@ -250,7 +250,7 @@ class WC_NYP_Subs_Switching {
 
 		$nyp_product = wc_get_product( $nyp_id );
 
-		if( WC_Name_Your_Price_Helpers::is_nyp( $nyp_product ) ){
+		if( WC_Name_Your_Price_Helpers::is_nyp( $nyp_product ) && ( $nyp_product->is_type( 'subscription' ) && $this->supports_nyp_switching() ) || $nyp_product->is_type( 'subscription_variation' ) ) {
 
 			$args = array( 'nyp' => $subscription->get_item_subtotal( $existing_item, $subscription->get_prices_include_tax() ) );
 
