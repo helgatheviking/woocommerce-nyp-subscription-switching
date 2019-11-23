@@ -252,9 +252,7 @@ class WC_NYP_Subs_Switching {
 
 		if( WC_Name_Your_Price_Helpers::is_nyp( $nyp_product ) ){
 
-			$inc_tax = get_option( 'woocommerce_prices_include_tax', 'no' ) == 'yes' ? true : false;
-
-			$args = array( 'nyp' => $subscription->get_item_subtotal( $existing_item, $inc_tax ) );
+			$args = array( 'nyp' => $subscription->get_item_subtotal( $existing_item, $subscription->get_prices_include_tax() ) );
 
 			if( WC_Name_Your_Price_Helpers::is_billing_period_variable( $nyp_product ) ){
 				$args['nyp-period'] = WC_Name_Your_Price_Core_Compatibility::get_prop( $subscription, 'billing_period' );
