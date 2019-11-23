@@ -71,7 +71,7 @@ class WC_NYP_Subs_Switching {
 	 * @since 0.1.0
 	 */
 	public function __clone() {
-		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?' ), 'wc_name_your_price' );
+		_doing_it_wrong( __FUNCTION__, __( 'Cloning this object is forbidden.' ), 'wc_nyp_sub_switch' );
 	}
 
 	/**
@@ -80,7 +80,7 @@ class WC_NYP_Subs_Switching {
 	 * @since 0.1.0
 	 */
 	public function __wakeup() {
-		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?' ), 'wc_name_your_price' );
+		_doing_it_wrong( __FUNCTION__, __( 'Unserializing instances of this class is forbidden.' ), 'wc_nyp_sub_switch' );
 	}
 
 	/**
