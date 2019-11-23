@@ -108,7 +108,10 @@ class WC_NYP_Subs_Switching {
 			return false;
 		}
 
-		// allow subscription prices to be switched
+		// Extra 'Allow Switching' checkboxes.
+		add_filter( 'woocommerce_subscriptions_allow_switching_options', array( __CLASS__, 'allow_switching_options' ) );
+
+		// Allow subscription prices to be switched.
 		add_filter( 'wcs_is_product_switchable', array( $this, 'is_switchable' ), 10, 3 );
 		add_filter( 'woocommerce_subscriptions_switch_is_identical_product', array( $this, 'is_identical_product' ), 10, 6 );
 		add_filter( 'woocommerce_subscriptions_add_switch_query_args', array( $this, 'add_switch_query_args' ), 10, 3 );
@@ -171,6 +174,23 @@ class WC_NYP_Subs_Switching {
 			delete_option( 'wc_nyp_subs_switching_notices' );
 		}
 
+	}
+
+	/**
+	 * Add extra 'Allow Switching' options.
+	 *
+	 * @param  array  $data
+	 * @return array
+	 * @since  0.2.0
+	 */
+	public static function allow_switching_options( $data ) {
+		return array_merge( $data, array(
+			array(
+				'id'       => 'nyp_price',
+				'label'    => __( 'Change Name Your Price subscription amount', 'wc_name_your_price' ),
+				'desc_tip' => __( 'Applies to simple subscriptions only. If switching between variations is enabled, Name Your Price variations will automatically be able to be edited.', 'wc_name_your_price' )
+			)
+		) );
 	}
 
 	/*
