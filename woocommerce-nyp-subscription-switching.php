@@ -110,6 +110,7 @@ class WC_NYP_Subs_Switching {
 
 		// allow subscription prices to be switched
 		add_filter( 'wcs_is_product_switchable', array( $this, 'is_switchable' ), 10, 3 );
+		add_filter( 'woocommerce_subscriptions_switch_is_identical_product', array( $this, 'is_identical_product' ), 10, 6 );
 		add_filter( 'woocommerce_subscriptions_add_switch_query_args', array( $this, 'add_switch_query_args' ), 10, 3 );
 
     }
@@ -188,6 +189,49 @@ class WC_NYP_Subs_Switching {
 		return $is_product_switchable;
 	}
 
+	/*
+	 * Test if is identical product
+	 *
+	 * @param bool $is_identical
+	 * @param obj $product
+	 * @return bool
+	 */
+	public function is_identical_product( $is_identical, $product_id, $quantity, $variation_id, $subscription, $item ){
+
+		if( $is_identical ) {
+
+			$nyp_id = $variation_id ? $variation_id : $product_id;
+
+			if( WC_Name_Your_Price_Helpers::is_nyp( $nyp_id ) ){
+
+				$prefix = WC_Name_Your_Price_Helpers::get_prefix( $nyp_id );
+
+				$nyp_product = wc_get_product( $nyp_id );
+
+				$initial_subscription_price = floatval( $subscription->get_item_subtotal( $item, $subscription->get_prices_include_tax() ) );
+				$new_subscription_price = floatval( WC_Name_Your_Price_Helpers::get_posted_price( $nyp_id, $prefix ) );
+				$initial_subscription_period = WC_Name_Your_Price_Core_Compatibility::get_prop( $subscription, 'billing_period' );
+				$new_subscription_period = WC_Name_Your_Price_Helpers::get_posted_period( $nyp_id, $prefix );
+
+				// If variable billing period check both price and billing period.
+				if( WC_Name_Your_Price_Helpers::is_billing_period_variable( $nyp_id ) && $new_subscription_price === $initial_subscription_price && $new_subscription_period === $initial_subscription_period ){
+					throw new Exception( __( 'Please modify the price or billing period so that it is not the same as your existing subscription.', 'wc_name_your_price' ) );
+					$is_identical = true;
+				// Check price only.
+				} else if ( $new_subscription_price === $initial_subscription_price ){
+					$is_identical = true;
+					throw new Exception( __( 'Please modify the price so that it is not the same as your existing subscription.', 'wc_name_your_price' ) );
+				// If the price/period is different then this is NOT and identical product. Do not remove!
+				} else {
+					$is_identical = false;
+				}
+
+			}
+
+		}
+
+		return $is_identical;
+	}
 
 	/*
 	 * Add the existing price/period to switch link to pre-populate values
@@ -226,6 +270,16 @@ class WC_NYP_Subs_Switching {
 		return $permalink;
 	}
 
+	/**
+	 * Is NYP switching enabled
+	 *
+	 * @param bool $is_product_switchable
+	 * @param obj $product
+	 * @return bool
+	 */
+	public function supports_nyp_switching(){
+		return wc_string_to_bool( get_option( WC_Subscriptions_Admin::$option_prefix . '_allow_switching_nyp_price', 'no' ) );
+	}
 
 } //end class: do not remove or there will be no more guacamole for you
 
